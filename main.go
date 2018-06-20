@@ -29,7 +29,19 @@ func readLines(path string) ([]string, error) {
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	return lines, scanner.Err()
+
+	encountered := map[string]bool{}
+	result := []string{}
+	for v := range lines {
+		if encountered[lines[v]] == true {
+			// do not add dupe
+		} else {
+			encountered[lines[v]] = true
+			// Append to result slice
+			result = append(result, lines[v])
+		}
+	}
+	return result, scanner.Err()
 }
 
 func urlCheck(url string) (Node, error) {
