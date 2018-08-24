@@ -16,6 +16,7 @@ type Node struct {
 	link        string
 	redirectURL string
 	statusCode  int
+	headers     http.Header
 }
 
 // readLines -
@@ -64,6 +65,7 @@ func urlCheck(url string) (Node, error) {
 	}
 	data.link = url
 	data.statusCode = resp.StatusCode
+	data.headers = resp.Header
 	if resp.Request.URL.String() != url {
 		data.redirectURL = resp.Request.URL.String()
 	}
@@ -108,7 +110,11 @@ func main() {
 	for _, link := range checked {
 		if link.statusCode == 404 {
 			fmt.Printf("Url: %s, reported: %d\n", link.link, link.statusCode)
+			for k, v := range link.headers {
+				fmt.Printf("Header field %s and value %s\n", k, v)
+			}
 		}
+
 	}
 
 }
